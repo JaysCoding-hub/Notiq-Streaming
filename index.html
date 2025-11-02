@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOTIQ Epic Intro</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #0a0a0a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    .logo-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .letter {
+        font-size: 10rem;
+        font-weight: 900;
+        color: #9b59b6;
+        text-shadow:
+            0 0 15px #9b59b6,
+            0 0 30px #9b59b6,
+            0 0 60px #8e44ad;
+        position: relative;
+        transform: translateY(-150vh);
+        display: inline-block;
+        animation: drop 0.8s forwards;
+    }
+
+    @keyframes drop {
+        0% { transform: translateY(-150vh); }
+        60% { transform: translateY(20px); }
+        80% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+
+    /* Zoom Effekt für finale Szene */
+    .zoom-center {
+        animation: zoomCenter 1.2s forwards;
+        transform-origin: center;
+    }
+
+    @keyframes zoomCenter {
+        0% { transform: scale(1); }
+        100% { transform: scale(10); opacity: 0; }
+    }
+
+    /* Dynamischer Hintergrund */
+    .particle, .line {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.8;
+    }
+
+    .particle {
+        width: 3px;
+        height: 3px;
+        background: #9b59b6;
+        filter: blur(2px);
+        animation: floatParticle 5s linear infinite;
+    }
+
+    @keyframes floatParticle {
+        0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(-900px) translateX(200px) scale(1.2); opacity: 0; }
+    }
+
+    .line {
+        width: 2px;
+        height: 100px;
+        background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+        opacity: 0.3;
+        animation: floatLine 3s linear infinite;
+    }
+
+    @keyframes floatLine {
+        0% { transform: translateY(0) scaleY(0.5); opacity: 0.3; }
+        50% { transform: translateY(-200px) scaleY(1.2); opacity: 0.6; }
+        100% { transform: translateY(0) scaleY(0.5); opacity: 0.3; }
+    }
+</style>
+</head>
+<body>
+
+<div class="logo-container" id="logoContainer"></div>
+
+<script>
+    const text = "NOTIQ";
+    const container = document.getElementById('logoContainer');
+
+    // Buchstaben erstellen und fallen lassen
+    text.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = char;
+        span.style.animationDelay = (index * 0.2) + 's'; 
+        container.appendChild(span);
+    });
+
+    // Partikel im Hintergrund
+    for(let i=0;i<120;i++){
+        const particle = document.createElement('div');
+        particle.className='particle';
+        particle.style.left = Math.random()*window.innerWidth+'px';
+        particle.style.top = Math.random()*window.innerHeight+'px';
+        particle.style.width = (2+Math.random()*4)+'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random()*5+'s';
+        document.body.appendChild(particle);
+    }
+
+    // Linien im Hintergrund
+    for(let i=0;i<50;i++){
+        const line = document.createElement('div');
+        line.className='line';
+        line.style.left = Math.random()*window.innerWidth+'px';
+        line.style.top = Math.random()*window.innerHeight+'px';
+        line.style.height = (50+Math.random()*150)+'px';
+        line.style.animationDelay = Math.random()*3+'s';
+        document.body.appendChild(line);
+    }
+
+    // Nach Buchstaben Drop Zoom in Mitte
+    setTimeout(()=>{
+        container.classList.add('zoom-center');
+    }, 1800); // nachdem alle Buchstaben gefallen sind
+
+    // Automatisch weiterleiten nach Zoom
+    setTimeout(()=>{
+        window.location.href = "home.html";
+    }, 3200); // Zoom + kurzer Puffer
+</script>
+
+</body>
+</html>

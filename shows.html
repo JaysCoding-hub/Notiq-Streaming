@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Notiq</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">Notiq</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="link" href="home.html">Home</a></li>
+                <li><a class="link" href="shows.html">Shows</a></li>
+                <li><a class="link" href="movies.html">Movies</a></li>
+                <li><a class="link" href="#" id="add-btn">Add</a></li>
+                <li><a class="link" href="settings.html" id="settings-btn">Einstellungen</a></li>
+                <!--<li><a class="link" href="search.html">Search</a></li>-->
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Cards werden hier dynamisch eingefügt -->
+        <section class="my-list">
+            <h2>Shows</h2>
+            <div class="list-grid" id="shows-grid">
+            </div>
+        </section>
+        <section class="my-list">
+            <h2>Anime</h2>
+            <div class="list-grid" id="animeshow-grid">
+            </div>
+        </section>
+
+    </main>
+    <!-- Overlay Formular -->
+    <div class="overlay" id="overlay">
+        <div class="form-container">
+            <h2>Add Show or Movie</h2>
+            <form id="add-form">
+                <label for="type">Type</label>
+                <select id="type" required>
+                    <option value="movie">Movie</option>
+                    <option value="show">Show</option>
+                </select>
+                <div id="category-row" style="display:none;">
+                    <label for="category">Kategorie</label>
+                    <select id="category">
+                        <option value="show">Show</option>
+                        <option value="movie">Movie</option>
+                        <option value="anime">Anime</option>
+                    </select>
+                </div>
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+                <label for="desc">Beschreibung</label>
+                <textarea id="desc"></textarea>
+                <div class="row">
+                    <div style="flex:1">
+                        <label for="season">Staffel</label>
+                        <input type="number" id="season" min="1">
+                    </div>
+                    <div style="flex:1">
+                        <label for="episode">Folge</label>
+                        <input type="number" id="episode" min="1">
+                    </div>
+                </div>
+                <label for="image">Bild URL</label>
+                <input type="url" id="image">
+                <div class="form-actions">
+                    <button type="submit">Add</button>
+                    <button type="button" id="cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

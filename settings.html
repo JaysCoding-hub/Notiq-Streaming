@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einstellungen - Notiq</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">Notiq</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a class="link" href="home.html">Home</a></li>
+                <li><a class="link" href="shows.html">Shows</a></li>
+                <li><a class="link" href="movies.html">Movies</a></li>
+                <li><a class="link" href="#" id="add-btn">Add</a></li>
+                <li><a class="link" href="settings.html" id="settings-btn">Einstellungen</a></li>
+                <!--<li><a class="link" href="search.html">Search</a></li>-->
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="my-list">
+            <h2>Einstellungen</h2>
+            <button id="download-json" style="padding:12px 32px;font-size:1.1rem;background:#b026ff;color:#fff;border:none;border-radius:8px;font-weight:bold;box-shadow:0 0 10px #b026ff;cursor:pointer;">
+                Beiträge herunterladen (JSON, sortiert)
+            </button>
+            <div style="margin-top:30px;">
+                <p>Du kannst alle Beiträge als sortierte JSON-Datei herunterladen und für eigene Programmierung verwenden.</p>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.getElementById("download-json").onclick = function() {
+            let cards = [];
+            try {
+                cards = JSON.parse(localStorage.getItem("notiq_cards") || "[]");
+            } catch(e) {}
+            // Sortiere: zuerst nach type (show, movie), dann nach name alphabetisch
+            cards.sort((a, b) => {
+                if (a.type !== b.type) return a.type.localeCompare(b.type);
+                return (a.name || "").localeCompare(b.name || "");
+            });
+            const data = JSON.stringify(cards, null, 2);
+            const blob = new Blob([data], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "notiq_beiträge_sortiert.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+    </script>
+</body>
+</html>
