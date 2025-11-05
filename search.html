@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Suche – Notiq</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo">Notiq</div>
+    <nav class="main-nav">
+      <ul>
+        <li><a class="link" href="home.html">Home</a></li>
+        <li><a class="link" href="shows.html">Shows</a></li>
+        <li><a class="link" href="movies.html">Movies</a></li>
+        <li><a class="link" href="settings.html">Einstellungen</a></li>
+        <li><a class="link" href="search.html">Search</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main style="padding:40px;">
+    <h2 style="color:#b026ff;">🔍 Beitrag suchen</h2>
+    <input id="search-input" type="text" placeholder="Name eingeben..." 
+      style="width:100%;max-width:500px;padding:12px;border:none;border-radius:8px;margin:20px 0;background:#181825;color:#fff;font-size:1rem;">
+
+    <div id="results" style="display:flex;flex-wrap:wrap;gap:20px;"></div>
+  </main>
+
+  <!-- Overlay für Details -->
+  <div id="detail-overlay" class="overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;z-index:3000;">
+    <div id="detail-container" style="background:#111;padding:30px;border-radius:10px;max-width:900px;width:90%;color:#fff;position:relative;"></div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById("search-input");
+    const resultsDiv = document.getElementById("results");
+    const overlay = document.getElementById("detail-overlay");
+    const container = document.getElementById("detail-container");
+
+    function createCard(cardData) {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.style.width = "180px";
+      card.style.background = "#0f0f17";
+      card.style.borderRadius = "8px";
+      card.style.overflow = "hidden";
+      card.style.cursor = "pointer";
+      card.style.boxShadow = "0 0 10px #b026ff44";
+
+      const img = document.createElement("img");
+      img.src = cardData.image || "https://i.pinimg.com/736x/f2/73/f8/f273f886579f46815f1e272a48c0c592.jpg";
+      img.style.width = "100%";
+      img.style.height = "220px";
+      img.style.objectFit = "cover";
+      card.appendChild(img);
+
+      const name = document.createElement("h3");
+      name.textContent = cardData.name || "Unbenannt";
+      name.style.color = "#fff";
+      name.style.fontSize = "1rem";
+      name.style.padding = "10px";
+      card.appendChild(name);
+
+      // 🔹 Klick öffnet Detail-Overlay
+      card.addEventListener("click", () => showDetail(cardData));
+
+      return card;
+    }
+
+    function showResults(filterText) {
+      const allCards = JSON.parse(localStorage.getItem("notiq_cards") || "[]");
+      const searchTerm = filterText.toLowerCase();
+
+      const filtered = allCards.filter(c =>
+        (c.name || "").toLowerCase().includes(searchTerm)
+      );
+
+      resultsDiv.innerHTML = "";
+
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = `<p style="color:#aaa;">Keine Ergebnisse gefunden.</p>`;
+        return;
+      }
+
+      filtered.forEach(c => resultsDiv.appendChild(createCard(c)));
+    }
+
+    function showDetail(cardData) {
+      container.innerHTML = `
+        <button id="close-detail" style="position:absolute;top:10px;right:10px;background:#b026ff;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.3rem;cursor:pointer;">&times;</button>
+
+        <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;">
+          <img src="${cardData.image || "https://i.pinimg.com/736x/f2/73/f8/f273f886579f46815f1e272a48c0c592.jpg"}"
+            style="width:240px;height:340px;object-fit:cover;border-radius:8px;">
+          
+          <div style="flex:1;">
+            <h2 style="color:#b026ff;">${cardData.name}</h2>
+            <p style="color:#aaa;margin-top:10px;">${cardData.desc || "Keine Beschreibung vorhanden."}</p>
+            <p style="margin-top:20px;color:#b026ff;">
+              Typ: <strong>${cardData.type || "Unbekannt"}</strong><br>
+              Kategorie: <strong>${cardData.category || "-"}</strong><br>
+              Staffel: <strong>${cardData.season || "-"}</strong><br>
+              Folge: <strong>${cardData.episode || "-"}</strong>
+            </p>
+          </div>
+        </div>
+      `;
+
+      overlay.style.display = "flex";
+      document.getElementById("close-detail").onclick = () => overlay.style.display = "none";
+    }
+
+    // Live Suche
+    searchInput.addEventListener("input", e => {
+      showResults(e.target.value.trim());
+    });
+
+    // Beim Start alle zeigen
+    showResults("");
+  </script>
+</body>
+</html>
