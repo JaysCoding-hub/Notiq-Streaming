@@ -28,6 +28,11 @@
             <div style="margin-top:30px;">
                 <p>Du kannst alle Beiträge als sortierte JSON-Datei herunterladen und für eigene Programmierung verwenden.</p>
             </div>
+            <button id="upload-json" style="padding:12px 32px;font-size:1.1rem;background:#444;color:#fff;border:none;border-radius:8px;font-weight:bold;box-shadow:0 0 10px #444;cursor:pointer;margin-top:20px;">
+    Beiträge laden (JSON importieren)
+</button>
+<input type="file" id="json-file" accept="application/json" style="display:none;" />
+
         </section>
     </main>
     <script>
@@ -52,6 +57,42 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         };
+
+
+    document.getElementById("upload-json").onclick = () => {
+    document.getElementById("json-file").click();
+    };
+
+    document.getElementById("json-file").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const importedData = JSON.parse(event.target.result);
+
+            if (!Array.isArray(importedData)) {
+                alert("Fehler: Datei enthält kein gültiges JSON-Array.");
+                return;
+            }
+
+            if (!confirm("Sollen alle bestehenden Beiträge ersetzt werden?")) return;
+
+            // Lokale Daten ersetzen
+            localStorage.setItem("notiq_cards", JSON.stringify(importedData));
+
+            alert("✅ Daten erfolgreich importiert! Seite wird neu geladen...");
+            location.reload();
+        } catch (err) {
+            alert("❌ Fehler beim Laden der Datei: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+    });
+
+
     </script>
 </body>
 </html>
+
